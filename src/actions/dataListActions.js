@@ -1,4 +1,5 @@
 import * as types from "../constants/ActionTypes";
+import { base_url } from "../constants/ReUsageStaff";
 import * as api from "../constants/ReUsageStaff";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -93,51 +94,12 @@ export const singleDataFetchFailure = (error) => ({
   },
 });
 
-export const singleDataFetch = (id) => async (dispatch) => {
-  console.log("singleDataFetch");
-  const response = await axios.get("base_url" + id);
-  console.log("response", response);
-  dispatch({ type: "Get_POST", payload: response.data });
-
-  // dispatch(singleDataFetchStart());
-  // let headers = new Headers();
-  // headers.append("Content-Type", "application/json");
-  // headers.append("Accept", "application/json");
-  // headers.append("Authorization", "Bearer ");
-  // headers.append("Origin", "*");
-  // const requestOptions = {
-  //   method: "GET",
-  //   headers: headers,
-  // };
-  // fetch(api.single_datafetch_url + id, requestOptions)
-  //   .then((response) => {
-  //     const statusCode = response.status;
-  //     const data = response.json();
-  //     return Promise.all([statusCode, data]);
-  //   })
-
-  //   .then(([statusCode, data]) => {
-  //     if (statusCode === 200) {
-  //       dispatch(singleDataFetchSuccess(data));
-  //     } else if (statusCode === 422) {
-  //       toast.error("singleDataFetchFailure");
-  //       dispatch(singleDataFetchFailure("There are some Error！"));
-  //     } else if (statusCode === 401) {
-  //       dispatch(singleDataFetchFailure(statusCode));
-  //     } else if (data.detail) {
-  //       toast.error(data.detail);
-  //       dispatch(singleDataFetchFailure(data.detail));
-  //     } else {
-  //       toast.error("Error！");
-  //       dispatch(singleDataFetchFailure("Server error!"));
-  //     }
-  //   })
-  //   .catch((error) => {
-  //     dispatch(singleDataFetchFailure(error));
-  //   });
-};
-
-//Data add
+export function singleDataFetch(id) {
+  return async (dispatch) => {
+    const response = await axios.get(base_url + "/posts/" + id);
+    dispatch({ type: "Get_POST", payload: response.data });
+  };
+}
 
 export const dataAddStart = () => ({
   type: types.DATA_ADD_START,

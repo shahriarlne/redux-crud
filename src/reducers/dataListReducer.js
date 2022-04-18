@@ -33,17 +33,18 @@ export default function authReducer(state = initialState, action) {
     case LIST_FETCH_FAILURE:
       return Object.assign({}, state, action.payload);
 
-    case SINGLE_DATA_FACE_START:
-      return;
+    // case SINGLE_DATA_FACE_START:
+    //   return;
     // return Object.assign({}, state, action.payload);
-    case SINGLE_DATA_FACE_SUCCESS:
-      return {
-        ...state,
-        post: action.payload.singledata,
-      };
-    // return Object.assign({}, state, action.payload);
-    case SINGLE_DATA_FACE_FAILURE:
-      return;
+    // case SINGLE_DATA_FACE_SUCCESS:
+    //   console.log("action.payload", action.payload);
+    //   return {
+    //     ...state,
+    //     post: action.payload,
+    //   };
+    // // return Object.assign({}, state, action.payload);
+    // case SINGLE_DATA_FACE_FAILURE:
+    //   return;
 
     // return Object.assign({}, state, action.payload);
 

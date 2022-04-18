@@ -1,14 +1,10 @@
 import React, { Component } from "react";
-import {
-  dataAdd,
-  dataEdit,
-  singleDataFetch,
-} from "../../actions/dataListActions";
 import { toast } from "react-toastify";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Container, Table, Button, Row, Col, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { singleDataFetch } from "../../actions/dataListActions";
 
 class EditData extends Component {
   constructor(props) {
@@ -23,38 +19,9 @@ class EditData extends Component {
     };
   }
 
-  getId() {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const id = urlSearchParams.get("id");
-    console.log("window.location.href", window.location.href);
-
-    // const chars = (window.location.search).split('');
-    // console.log(chars[8]);
-
-    // var newURL = (window.location.href);
-    console.log(id);
-    var splitURL = window.location.href.toString().split("/");
-
-    console.log(splitURL.length);
-
-    if (!id || id.length === 0) {
-      return "";
-    }
-
-    return id;
-  }
-
   async componentDidMount() {
-    console.log("mount called");
     const id = this.props.match.params.id;
-    await singleDataFetch(id);
-  }
-
-  componentWillReceiveProps(newProps) {
-    this.setState({
-      title: newProps.singledata.title,
-      body: newProps.singledata.body,
-    });
+    await this.props.dispatch(singleDataFetch(id));
   }
 
   handleSubmit = (e) => {
@@ -107,7 +74,8 @@ class EditData extends Component {
 
   render() {
     const data = this.props.data?.data;
-    const post = this.props.singledata;
+    const post = this.props.data.post;
+
     return (
       <Container>
         <Row>
@@ -132,7 +100,7 @@ class EditData extends Component {
                     type="text"
                     placeholder="Title"
                     name="title"
-                    defaultValue={post.title}
+                    defaultValue={post?.title}
                     onChange={this.TitleChange}
                   />
                   <Form.Label>Body</Form.Label>
@@ -140,7 +108,7 @@ class EditData extends Component {
                     type="text"
                     placeholder="Body"
                     name="body"
-                    defaultValue={post.body}
+                    defaultValue={post?.body}
                     onChange={this.BodyChange}
                   />
                 </Form.Group>
@@ -161,7 +129,7 @@ const mapStateToProps = (state) => {
   return {
     auth: state.auth,
     data: state.data,
-    singledata: state.data.singledata,
+    post: state.post,
   };
 };
 export default connect(mapStateToProps)(withRouter(EditData));

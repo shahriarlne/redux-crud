@@ -23,14 +23,13 @@ function loadFromLocalStorage() {
   }
 }
 
-const persistedState = loadFromLocalStorage();
+// const persistedState = loadFromLocalStorage();
 
 /**
  * Create a Redux store that holds the app state.
  */
 const store = createStore(
   rootReducer,
-  persistedState,
   compose(
     applyMiddleware(thunkMiddleware),
 
@@ -45,7 +44,7 @@ const store = createStore(
 
 const unsubscribe = store.subscribe(() => {
   const state = store.getState();
-  saveToLocalStorage(state);
+  // saveToLocalStorage(state);
 });
-console.warn(unsubscribe);
+// console.warn(unsubscribe);
 export default store;
