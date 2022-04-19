@@ -3,7 +3,8 @@ import { combineReducers } from "redux";
 import authReducer from "./authReducer";
 // Import custom reducers
 // import foreignerRegistrationReducer from "./foreignerReducer";
-import data from "./dataListReducer"
+import data from "./dataListReducer";
+// import singleData from "./"
 
 const rootReducer = combineReducers({
   auth: authReducer,

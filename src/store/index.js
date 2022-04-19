@@ -31,14 +31,14 @@ function loadFromLocalStorage() {
 const store = createStore(
   rootReducer,
   compose(
-    applyMiddleware(thunkMiddleware),
+    applyMiddleware(thunkMiddleware)
 
     //For working redux dev tools in chrome (https://github.com/zalmoxisus/redux-devtools-extension)
-    typeof window !== "undefined" && window.__REDUX_DEVTOOLS_EXTENSION__
-      ? window.__REDUX_DEVTOOLS_EXTENSION__()
-      : function (f) {
-          return f;
-        }
+    // typeof window !== "undefined" && window.__REDUX_DEVTOOLS_EXTENSION__
+    //   ? window.__REDUX_DEVTOOLS_EXTENSION__()
+    //   : function (f) {
+    //       return f;
+    //     }
   )
 );
 

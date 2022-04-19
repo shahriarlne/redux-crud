@@ -17,11 +17,9 @@ import {
 } from "../constants/ActionTypes";
 
 const initialState = {
-  data: [],
+  data: "",
   datafetchLoading: false,
-  // singledata: { title: "title", body: "body", id: 3 },
-  posts: [],
-  post: {},
+  singledata: "",
 };
 
 export default function authReducer(state = initialState, action) {
@@ -33,10 +31,13 @@ export default function authReducer(state = initialState, action) {
     case LIST_FETCH_FAILURE:
       return Object.assign({}, state, action.payload);
 
-    // case SINGLE_DATA_FACE_START:
-    //   return;
-    // return Object.assign({}, state, action.payload);
-    // case SINGLE_DATA_FACE_SUCCESS:
+    case SINGLE_DATA_FACE_START:
+      return Object.assign({}, state, action.payload);
+    case SINGLE_DATA_FACE_SUCCESS:
+      return Object.assign({}, state, action.payload);
+    case SINGLE_DATA_FACE_FAILURE:
+      return Object.assign({}, state, action.payload);
+
     //   console.log("action.payload", action.payload);
     //   return {
     //     ...state,
@@ -46,13 +47,13 @@ export default function authReducer(state = initialState, action) {
     // case SINGLE_DATA_FACE_FAILURE:
     //   return;
 
-    // return Object.assign({}, state, action.payload);
+    //   return Object.assign({}, state, action.payload);
 
-    case "Get_POST":
-      return {
-        ...state,
-        post: action.payload,
-      };
+    // case "Get_POST":
+    //   return {
+    //     ...state,
+    //     post: action.payload,
+    //   };
 
     case DATA_ADD_START:
       return Object.assign({}, state, action.payload);

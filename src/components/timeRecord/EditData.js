@@ -10,6 +10,7 @@ class EditData extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      singleData: [],
       title: "",
       body: "",
       add: false,
@@ -22,6 +23,23 @@ class EditData extends Component {
   async componentDidMount() {
     const id = this.props.match.params.id;
     await this.props.dispatch(singleDataFetch(id));
+    this.setState({
+      // singleData: this.props.data.singledata,
+      title: this.props.data.singledata.title,
+      body: this.props.data.singledata.body,
+    });
+  }
+  componentWillReceiveProps(newProps) {
+    console.log("singledata newprops", newProps.data.singledata);
+    if (
+      newProps.data.singledata.title != this.state.title ||
+      newProps.data.singledata.body != this.state.body
+    ) {
+      this.setState({
+        title: newProps.data.singledata.title,
+        body: newProps.data.singledata.body,
+      });
+    }
   }
 
   handleSubmit = (e) => {
@@ -50,7 +68,7 @@ class EditData extends Component {
     };
 
     if (this.state.title != null && this.state.body != null) {
-      this.props.dataEdit(data, this.state.getId);
+      this.props.dataEdit(data, data.singledata.id);
       this.setState({
         title: "",
         body: "",
@@ -68,13 +86,18 @@ class EditData extends Component {
     this.setState({ title: event.target.value });
   };
 
-  handleEditPost(e) {
-    e.preventDefault();
-  }
+  // handleEditPost(e) {
+  //   e.preventDefault();
+  // }
 
   render() {
     const data = this.props.data?.data;
     const post = this.props.data.post;
+    console.log("singledata title", this.state.title);
+    console.log("singledata body", this.state.body);
+    // console.log("single body", this.state.body);
+    // console.log("single props", this.props.data.singledata.title);
+    // console.log("single props", this.props.data.singledata.body);
 
     return (
       <Container>
@@ -93,14 +116,14 @@ class EditData extends Component {
         <Row>
           <Col xs={6} style={{ margin: "auto" }}>
             <div>
-              <Form onSubmit={this.handleEditPost}>
+              <Form>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Title</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Title"
                     name="title"
-                    defaultValue={post?.title}
+                    value={this.state.title}
                     onChange={this.TitleChange}
                   />
                   <Form.Label>Body</Form.Label>
@@ -108,12 +131,16 @@ class EditData extends Component {
                     type="text"
                     placeholder="Body"
                     name="body"
-                    defaultValue={post?.body}
+                    value={this.state.body}
                     onChange={this.BodyChange}
                   />
                 </Form.Group>
-                <Button variant="primary" type="submit">
-                  Update post
+                <Button
+                  variant="primary"
+                  type="submit"
+                  onClick={this.handleEdit}
+                >
+                  Update
                 </Button>
               </Form>
               <br />

@@ -94,12 +94,51 @@ export const singleDataFetchFailure = (error) => ({
   },
 });
 
-export function singleDataFetch(id) {
-  return async (dispatch) => {
-    const response = await axios.get(base_url + "/posts/" + id);
-    dispatch({ type: "Get_POST", payload: response.data });
+export const singleDataFetch = (id) => (dispatch) => {
+  dispatch(singleDataFetchStart());
+  let headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Accept", "application/json");
+  // headers.append("Authorization", "Bearer ");
+  headers.append("Origin", "*");
+  const requestOptions = {
+    method: "GET",
+    headers: headers,
   };
-}
+  fetch(api.single_datafetch_url + id, requestOptions)
+    .then((response) => {
+      const statusCode = response.status;
+      const data = response.json();
+      return Promise.all([statusCode, data]);
+    })
+
+    .then(([statusCode, data]) => {
+      if (statusCode === 200) {
+        dispatch(singleDataFetchSuccess(data));
+      } else if (statusCode === 422) {
+        toast.error("datafetchFailure");
+        dispatch(singleDataFetchFailure("There are some Error！"));
+      } else if (statusCode === 401) {
+        dispatch(singleDataFetchFailure(statusCode));
+      } else if (data.detail) {
+        toast.error(data.detail);
+        dispatch(singleDataFetchFailure(data.detail));
+      } else {
+        toast.error("Error！");
+        dispatch(singleDataFetchFailure("Server error!"));
+      }
+    })
+    .catch((error) => {
+      dispatch(singleDataFetchFailure(error));
+    });
+};
+
+// export function singleDataFetch(id) {
+//   return async (dispatch) => {
+//     const response = await axios.get(base_url + "/posts/" + id);
+//     dispatch({ type: "Get_POST", payload: response.data });
+//   };
+// }
 
 export const dataAddStart = () => ({
   type: types.DATA_ADD_START,
@@ -124,8 +163,14 @@ export const dataAddFailure = (error) => ({
     dataAddLoading: false,
   },
 });
+// export function dataAdd(id) {
+//   return async (dispatch) => {
+//     const response = await axios.post(base_url + "/posts/" + id);
+//     dispatch({ type: "Get_POST", payload: response.data });
+//   };
+// }
 
-export const dataAdd = (data) => (dispatch) => {
+export const dataAdd = (id) => (dispatch) => {
   dispatch(dataAddStart());
   let headers = new Headers();
   headers.append("Content-Type", "application/json");
@@ -136,14 +181,11 @@ export const dataAdd = (data) => (dispatch) => {
     method: "POST",
     headers: headers,
     body: JSON.stringify({
-      startDate: data.startDate,
-      startTime: data.startTime,
-      endDate: data.endDate,
-      endTime: data.endTime,
-      description: data.description,
+      title: id.title,
+      body: id.body,
     }),
   };
-  fetch(api.data_add_url, requestOptions)
+  fetch(api.data_add_url + id, requestOptions)
     .then((response) => {
       console.log("response", response);
 
@@ -203,6 +245,12 @@ export const dataEditFailure = (error) => ({
   },
 });
 
+// export function dataEdit(id) {
+//   return async (dispatch) => {
+//     const response = await axios.post(base_url + "/posts/" + id);
+//     dispatch({ type: "Get_POST", payload: response.data });
+//   };
+// }
 export const dataEdit = (data, id) => (dispatch) => {
   dispatch(dataEditStart());
   let headers = new Headers();

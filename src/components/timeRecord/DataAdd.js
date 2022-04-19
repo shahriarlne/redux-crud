@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   dataAdd,
   singleDataFetch,
@@ -10,10 +10,11 @@ import { withRouter } from "react-router-dom";
 import { Container, Table, Button, Row, Col, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Moment from "moment";
-class Login extends Component {
+class DataAdd extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      singleData: [],
       title: "",
       body: "",
       add: false,
@@ -34,32 +35,30 @@ class Login extends Component {
     return id;
   }
   componentDidMount() {
-    const job_id = this.getId();
-    this.setState({ getId: job_id });
-    if (job_id != "") {
-      this.props.singleDataFetch(job_id);
-    }
-
+    // const id = this.props.match.params.id;
+    // this.props.dispatch(dataAdd(id));
+    this.setState({
+      singleData: this.props.data.singledata,
+      title: this.props.data.singledata.title,
+      body: this.props.data.singledata.body,
+    });
   }
 
   componentWillReceiveProps(newProps) {
     this.setState({
-      edit: newProps.singledata.edit,
-      body: newProps.singledata.body,
+      title: newProps.data.singledata.title,
+      body: newProps.data.singledata.body,
     });
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
     let data = {
-      edit: this.state.edit,
+      title: this.state.edit,
       body: this.state.body,
     };
 
-    if (
-      this.state.edit != null &&
-      this.state.body != null 
-    ) {
+    if (this.state.edit != null && this.state.body != null) {
       this.props.dataAdd(data);
       this.setState({
         edit: "",
@@ -70,35 +69,16 @@ class Login extends Component {
     }
   };
 
-  handleEdit=(e)=>{
-        e.preventDefault();
-        let data = {
-          edit: this.state.edit,
-          body: this.state.body,
-        };
-
-        if (
-          this.state.edit != null &&
-          this.state.body != null
-        ) {
-          this.props.dataEdit(data,this.state.getId);
-          this.setState({
-            edit: "",
-            body: "",
-          });
-        } else {
-          toast.error("Field missing");
-        }
-
-  }
-
   BodyChange = (event) => {
-    this.setState({ edit: event.target.value });
-  };
-  TitleChange = (event) => {
     this.setState({ body: event.target.value });
   };
+  TitleChange = (event) => {
+    this.setState({ title: event.target.value });
+  };
+
   render() {
+    console.log("Add Data", this.state.edit);
+    console.log("Add Data", this.state.body);
     return (
       <Container>
         <Row>
@@ -107,7 +87,7 @@ class Login extends Component {
           </Col>
         </Row>
         <Row>
-          <Col xs={6} style={{ margin: "auto",marginBottom:"50px" }}>
+          <Col xs={6} style={{ margin: "auto", marginBottom: "50px" }}>
             <Link to="/">
               <Button>Back to the List</Button>
             </Link>
@@ -118,9 +98,9 @@ class Login extends Component {
             <div>
               <Form>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
-
                   <Form.Label>Title</Form.Label>
                   <Form.Control
+                    required
                     type="text"
                     placeholder="Title"
                     name="title"
@@ -129,6 +109,7 @@ class Login extends Component {
                   />
                   <Form.Label>Body</Form.Label>
                   <Form.Control
+                    required
                     type="text"
                     placeholder="Body"
                     name="body"
@@ -136,23 +117,14 @@ class Login extends Component {
                     onChange={this.BodyChange}
                   />
                 </Form.Group>
-                {this.state.getId != "" ? (
-                  <Button
-                    variant="primary"
-                    type="submit"
-                    onClick={this.handleEdit.bind(this)}
-                  >
-                    Update
-                  </Button>
-                ) : (
-                  <Button
-                    variant="primary"
-                    type="submit"
-                    onClick={this.handleSubmit.bind(this)}
-                  >
-                    Submit
-                  </Button>
-                )}
+
+                <Button
+                  variant="primary"
+                  type="submit"
+                  onClick={this.handleSubmit}
+                >
+                  Submit
+                </Button>
               </Form>
               <br />
             </div>
@@ -166,9 +138,10 @@ class Login extends Component {
 const mapStateToProps = (state) => {
   return {
     auth: state.auth,
+    data: state.data,
     singledata: state.data.singledata,
   };
 };
 export default connect(mapStateToProps, { dataAdd, singleDataFetch, dataEdit })(
-  withRouter(Login)
+  withRouter(DataAdd)
 );
